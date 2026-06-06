@@ -53,15 +53,25 @@
 /* === Mobile (< 480px) === */
 @media (max-width: 480px) {
   .productos-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .producto-card__foto {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
   }
 
-  .main { padding: 16px 12px; }
+  .producto-card__info { padding: 10px; gap: 4px; }
+
+  .producto-card__nombre { font-size: 12px; }
+
+  .producto-card__precio { font-size: 16px; }
+
+  .producto-card__btn { font-size: 11px; padding: 8px; gap: 4px; }
+
+  .producto-card__badge { font-size: 9px; padding: 2px 6px; }
+
+  .main { padding: 16px 10px; }
 
   .whatsapp-float {
     bottom: 16px;
