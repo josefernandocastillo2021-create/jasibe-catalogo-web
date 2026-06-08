@@ -598,11 +598,22 @@ button { cursor: pointer; border: none; font-family: inherit; }
   scroll-snap-align: start;
 }
 
+/* Dentro del carrusel "Destacados" el badge ⭐ es redundante: se oculta */
+.destacados-track .producto-card__badge--destacado { display: none; }
+
 @media (max-width: 768px) {
   /* 3 tarjetas visibles en móvil (gap 10px → 2 espacios = 20px) */
   .destacados-track { gap: 10px; }
   .destacados-track .producto-card {
     flex: 0 0 calc((100% - 20px) / 3);
+  }
+  /* Círculo de % más pequeño en el carrusel de destacados (tarjetas chicas) */
+  .destacados-track .producto-card__badge--oferta {
+    width: 32px;
+    height: 32px;
+    font-size: 9px;
+    top: 6px;
+    left: 6px;
   }
 }
 
