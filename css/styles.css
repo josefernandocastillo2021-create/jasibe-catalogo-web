@@ -6,6 +6,9 @@
 
 /* === Variables === */
 :root {
+  /* El sitio está diseñado para modo claro: evita que el navegador
+     invierta los colores cuando el celular está en modo oscuro */
+  color-scheme: light only;
   --color-primario: #1B3A6B;
   --color-primario-hover: #142d55;
   --color-secundario: #F5A623;
