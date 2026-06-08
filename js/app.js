@@ -18,7 +18,18 @@ document.addEventListener('DOMContentLoaded', () => {
   cargarBanners();
   iniciarBusqueda();
   iniciarSucursales();
+  iniciarDestacadosNav();
 });
+
+/* === Navegación del carrusel de destacados (flechas) === */
+function iniciarDestacadosNav() {
+  const track = document.getElementById('destacados-grid');
+  if (!track) return;
+  const paso = () => Math.max(track.clientWidth * 0.8, 200);
+  document.getElementById('destacados-prev')?.addEventListener('click', () => track.scrollBy({ left: -paso(), behavior: 'smooth' }));
+  document.getElementById('destacados-next')?.addEventListener('click', () => track.scrollBy({ left: paso(), behavior: 'smooth' }));
+  window.addEventListener('resize', actualizarNavDestacados);
+}
 
 /* === Sucursales === */
 const SUCURSALES = [
@@ -320,6 +331,16 @@ function renderizarDestacados() {
   seccion.style.display = 'block';
   const grid = document.getElementById('destacados-grid');
   grid.innerHTML = destacados.map(p => crearCardHTML(p)).join('');
+  actualizarNavDestacados();
+}
+
+/* Muestra las flechas solo si hay productos suficientes para deslizar */
+function actualizarNavDestacados() {
+  const track = document.getElementById('destacados-grid');
+  const nav = document.querySelector('.destacados__nav');
+  if (!track || !nav) return;
+  const sePuedeDeslizar = track.scrollWidth > track.clientWidth + 5;
+  nav.style.display = sePuedeDeslizar ? 'flex' : 'none';
 }
 
 function actualizarTitulo() {

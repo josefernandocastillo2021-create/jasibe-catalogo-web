@@ -538,6 +538,74 @@ button { cursor: pointer; border: none; font-family: inherit; }
   color: var(--color-primario);
 }
 
+/* === Destacados (carrusel horizontal, fondo amarillo) === */
+.destacados {
+  background: var(--color-secundario);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 32px;
+}
+
+.destacados__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.destacados__titulo {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.destacados__nav { display: flex; gap: 8px; flex-shrink: 0; }
+
+.destacados__flecha {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.95);
+  color: var(--color-primario);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+}
+.destacados__flecha:hover { background: #fff; transform: scale(1.08); }
+
+.destacados-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 2px;
+}
+.destacados-track::-webkit-scrollbar { display: none; }
+
+/* 4 tarjetas visibles en PC (gap 16px → 3 espacios = 48px) */
+.destacados-track .producto-card {
+  flex: 0 0 calc((100% - 48px) / 4);
+  scroll-snap-align: start;
+}
+
+@media (max-width: 768px) {
+  /* 3 tarjetas visibles en móvil (gap 10px → 2 espacios = 20px) */
+  .destacados-track { gap: 10px; }
+  .destacados-track .producto-card {
+    flex: 0 0 calc((100% - 20px) / 3);
+  }
+}
+
 /* === Grid de Productos === */
 .productos-grid {
   display: grid;
