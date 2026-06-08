@@ -202,24 +202,37 @@ async function cargarBanners() {
     const banners = filas
       .map(fila => ({
         orden: fila.c[0] ? fila.c[0].v : null,
-        link:  fila.c[1] ? fila.c[1].v.trim() : '',
+        link:  fila.c[1] && fila.c[1].v ? fila.c[1].v.trim() : '',
         activo: fila.c[2] ? fila.c[2].v : false,
       }))
-      .filter(b => b.activo === true || b.activo === 'TRUE')
+      .filter(b => (b.activo === true || b.activo === 'TRUE') && b.link !== '')
       .sort((a, b) => a.orden - b.orden);
 
-    if (banners.length === 0) return;
-
+    const seccion = document.querySelector('.carrusel');
     const track = document.getElementById('carrusel-track');
+    if (!track) return;
+
+    // Sin banners activos: ocultar el carrusel por completo
+    if (banners.length === 0) {
+      if (seccion) seccion.style.display = 'none';
+      return;
+    }
+
+    if (seccion) seccion.style.display = '';
     track.innerHTML = banners.map(b => {
       const fotoURL = convertirLinkDriveBanner(b.link);
       return `<div class="carrusel__slide">
-        <img src="${fotoURL}" alt="Banner promocional" loading="lazy" onerror="this.parentElement.style.background='#1B3A6B'">
+        <img src="${fotoURL}" alt="Banner promocional" loading="lazy">
       </div>`;
     }).join('');
 
+    // Armar el carrusel ya con los banners reales (dots, flechas, auto-avance)
+    iniciarCarrusel();
+
   } catch (e) {
     console.error('Error cargando banners:', e);
+    const seccion = document.querySelector('.carrusel');
+    if (seccion) seccion.style.display = 'none';
   }
 }
 
@@ -487,25 +500,30 @@ function cerrarMenuMovil() {
 }
 
 /* === Carrusel de banners === */
-(function iniciarCarrusel() {
+let carruselIntervalo = null;
+let carruselListo = false;
+
+function iniciarCarrusel() {
   const track = document.getElementById('carrusel-track');
   const dotsContenedor = document.getElementById('carrusel-dots');
-  if (!track) return;
+  if (!track || !dotsContenedor) return;
 
   const slides = track.querySelectorAll('.carrusel__slide');
   const total = slides.length;
+  if (total === 0) return;
+
   let actual = 0;
-  let intervalo;
+  if (carruselIntervalo) clearInterval(carruselIntervalo);
 
   const irA = (indice) => {
     actual = (indice + total) % total;
     track.style.transform = `translateX(-${actual * 100}%)`;
-    document.querySelectorAll('.carrusel__dot').forEach((d, i) => {
+    dotsContenedor.querySelectorAll('.carrusel__dot').forEach((d, i) => {
       d.classList.toggle('activo', i === actual);
     });
   };
 
-  /* Dots */
+  /* Dots según la cantidad real de banners */
   dotsContenedor.innerHTML = Array.from({ length: total }, (_, i) =>
     `<button class="carrusel__dot ${i === 0 ? 'activo' : ''}" aria-label="Banner ${i + 1}"></button>`
   ).join('');
@@ -513,25 +531,29 @@ function cerrarMenuMovil() {
     dot.addEventListener('click', () => { irA(i); reiniciarIntervalo(); });
   });
 
-  /* Botones prev/next */
-  document.getElementById('carrusel-prev')?.addEventListener('click', () => { irA(actual - 1); reiniciarIntervalo(); });
-  document.getElementById('carrusel-next')?.addEventListener('click', () => { irA(actual + 1); reiniciarIntervalo(); });
+  const iniciarIntervalo = () => {
+    if (total > 1) carruselIntervalo = setInterval(() => irA(actual + 1), 6500);
+  };
+  const reiniciarIntervalo = () => { clearInterval(carruselIntervalo); iniciarIntervalo(); };
 
-  /* Auto-avance cada 4.5s */
-  const iniciarIntervalo = () => { intervalo = setInterval(() => irA(actual + 1), 6500); };
-  const reiniciarIntervalo = () => { clearInterval(intervalo); iniciarIntervalo(); };
-
+  irA(0);
   iniciarIntervalo();
 
-  /* Pausa al pasar el mouse */
-  track.closest('.carrusel')?.addEventListener('mouseenter', () => clearInterval(intervalo));
-  track.closest('.carrusel')?.addEventListener('mouseleave', iniciarIntervalo);
+  /* Listeners (flechas, mouse, swipe) — solo una vez */
+  if (!carruselListo) {
+    carruselListo = true;
+    document.getElementById('carrusel-prev')?.addEventListener('click', () => { irA(actual - 1); reiniciarIntervalo(); });
+    document.getElementById('carrusel-next')?.addEventListener('click', () => { irA(actual + 1); reiniciarIntervalo(); });
 
-  /* Swipe táctil */
-  let startX = 0;
-  track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener('touchend', e => {
-    const diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) { irA(actual + (diff > 0 ? 1 : -1)); reiniciarIntervalo(); }
-  });
-})();
+    const cont = track.closest('.carrusel');
+    cont?.addEventListener('mouseenter', () => clearInterval(carruselIntervalo));
+    cont?.addEventListener('mouseleave', iniciarIntervalo);
+
+    let startX = 0;
+    track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', e => {
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) { irA(actual + (diff > 0 ? 1 : -1)); reiniciarIntervalo(); }
+    });
+  }
+}
