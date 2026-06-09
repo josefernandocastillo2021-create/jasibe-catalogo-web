@@ -1,6 +1,7 @@
 /* === app.js — Lógica principal del catálogo === */
 
 const CACHE_KEY = 'jordan_productos';
+const CACHE_KEY_BANNERS = 'jordan_banners';
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutos en ms
 const API_URL = 'https://script.google.com/macros/s/AKfycbw4Tx2mVKd_l6GuImW6SDJl_ZyX_IXGmYKzmhtlhewszfkLCHb0qrqkX8Z7Ni8MbNQ6_Q/exec';
 
@@ -193,50 +194,83 @@ async function cargarDesdeSheets() {
   });
 }
 
-/* === Banners desde Apps Script === */
+/* === Banners desde Apps Script (stale-while-revalidate) === */
 async function cargarBanners() {
+  const cache = leerCacheBanners();
+  if (cache) {
+    renderizarBanners(cache);
+    revalidarBanners(cache);
+    return;
+  }
   try {
-    const res = await fetch(`${API_URL}?tipo=banners`);
-    const filas = await res.json();
-
-    const banners = filas
-      .map(raw => {
-        const f = Object.fromEntries(Object.entries(raw).map(([k, v]) => [k.toLowerCase(), v]));
-        return {
-          orden:  Number(f.orden) || 0,
-          link:   String(f.link  || '').trim(),
-          activo: f.activo === true || String(f.activo).toUpperCase() === 'TRUE',
-        };
-      })
-      .filter(b => b.activo && b.link !== '')
-      .sort((a, b) => a.orden - b.orden);
-
-    const seccion = document.querySelector('.carrusel');
-    const track = document.getElementById('carrusel-track');
-    if (!track) return;
-
-    // Sin banners activos: ocultar el carrusel por completo
-    if (banners.length === 0) {
-      if (seccion) seccion.style.display = 'none';
-      return;
-    }
-
-    if (seccion) seccion.style.display = '';
-    track.innerHTML = banners.map(b => {
-      const fotoURL = convertirLinkDriveBanner(b.link);
-      return `<div class="carrusel__slide">
-        <img src="${fotoURL}" alt="Banner promocional" loading="lazy">
-      </div>`;
-    }).join('');
-
-    // Armar el carrusel ya con los banners reales (dots, flechas, auto-avance)
-    iniciarCarrusel();
-
+    const banners = await obtenerBannersFrescos();
+    guardarCacheBanners(banners);
+    renderizarBanners(banners);
   } catch (e) {
     console.error('Error cargando banners:', e);
     const seccion = document.querySelector('.carrusel');
     if (seccion) seccion.style.display = 'none';
   }
+}
+
+async function obtenerBannersFrescos() {
+  const res = await fetch(`${API_URL}?tipo=banners`);
+  const filas = await res.json();
+  return filas
+    .map(raw => {
+      const f = Object.fromEntries(Object.entries(raw).map(([k, v]) => [k.toLowerCase(), v]));
+      return {
+        orden:  Number(f.orden) || 0,
+        link:   String(f.link  || '').trim(),
+        activo: f.activo === true || String(f.activo).toUpperCase() === 'TRUE',
+      };
+    })
+    .filter(b => b.activo && b.link !== '')
+    .sort((a, b) => a.orden - b.orden);
+}
+
+async function revalidarBanners(cached) {
+  try {
+    const frescos = await obtenerBannersFrescos();
+    if (JSON.stringify(frescos) !== JSON.stringify(cached)) {
+      guardarCacheBanners(frescos);
+      renderizarBanners(frescos);
+    }
+  } catch { /* silencioso */ }
+}
+
+function renderizarBanners(banners) {
+  const seccion = document.querySelector('.carrusel');
+  const track = document.getElementById('carrusel-track');
+  if (!track) return;
+
+  if (banners.length === 0) {
+    if (seccion) seccion.style.display = 'none';
+    return;
+  }
+
+  if (seccion) seccion.style.display = '';
+  track.innerHTML = banners.map(b => {
+    const fotoURL = convertirLinkDriveBanner(b.link);
+    return `<div class="carrusel__slide">
+      <img src="${fotoURL}" alt="Banner promocional" loading="lazy">
+    </div>`;
+  }).join('');
+  iniciarCarrusel();
+}
+
+function guardarCacheBanners(datos) {
+  localStorage.setItem(CACHE_KEY_BANNERS, JSON.stringify({ ts: Date.now(), datos }));
+}
+
+function leerCacheBanners() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY_BANNERS);
+    if (!raw) return null;
+    const { ts, datos } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL) return null;
+    return datos;
+  } catch { return null; }
 }
 
 /* === Caché localStorage === */
