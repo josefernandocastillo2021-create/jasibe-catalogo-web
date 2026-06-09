@@ -440,7 +440,6 @@ function crearCardHTML(producto) {
   const regaliaHTML = producto.regalia
     ? `<div class="regalia-overlay">
         <img src="${convertirLinkDrive(producto.regalia)}" alt="Regalo incluido" class="regalia-overlay__img" loading="lazy">
-        <span class="regalia-overlay__label">🎁 Regalo</span>
       </div>`
     : '';
 
