@@ -859,8 +859,8 @@ button { cursor: pointer; border: none; font-family: inherit; }
 }
 
 .producto-card__foto .regalia-overlay__img {
-  width: 30px;
-  height: 30px;
+  width: 70px;
+  height: 70px;
   padding: 0;
   object-fit: contain;
   background: transparent;
