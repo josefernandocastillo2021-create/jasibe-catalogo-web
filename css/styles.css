@@ -858,11 +858,13 @@ button { cursor: pointer; border: none; font-family: inherit; }
   z-index: 2;
 }
 
-.regalia-overlay__img {
-  width: 28px;
-  height: 28px;
+.producto-card__foto .regalia-overlay__img {
+  width: 30px;
+  height: 30px;
+  padding: 0;
   object-fit: contain;
   background: transparent;
+  border: none;
   border-radius: 6px;
   filter: drop-shadow(0 1px 4px rgba(0,0,0,0.25));
 }
