@@ -455,11 +455,14 @@
       const fotoHTML = fotoURL
         ? `<img src="${escaparHTML(fotoURL)}" alt="${escaparHTML(p.nombre)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;foto-placeholder&quot;>Sin foto</div>'">`
         : '<div class="foto-placeholder"><span>Sin foto</span></div>';
+      const regaliaHTML = p.regalia
+        ? `<div class="regalia-overlay"><img src="${escaparHTML(convertirLinkDrive(p.regalia, 200))}" alt="Regalo incluido" class="regalia-overlay__img" loading="lazy"></div>`
+        : '';
       const precioAnt = oferta ? `<span class="producto-card__precio-anterior">L ${p.precio_anterior.toLocaleString('es-HN')}</span>` : '';
       return `
         <div class="producto-card" onclick="window.location='producto.html?id=${escaparArg(p.id)}'">
           ${oferta ? `<span class="producto-card__badge producto-card__badge--oferta">-${desc}%</span>` : ''}
-          <div class="producto-card__foto">${fotoHTML}</div>
+          <div class="producto-card__foto">${fotoHTML}${regaliaHTML}</div>
           <div class="producto-card__info">
             <span class="producto-card__categoria">${escaparHTML(p.categoria)} · <span style="font-weight:600;color:#1B3A6B;">${escaparHTML(p.id)}</span></span>
             <h3 class="producto-card__nombre">${escaparHTML(p.nombre)}</h3>
