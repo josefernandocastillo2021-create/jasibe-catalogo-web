@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://josefernandocastillo2021-create.github.io/jordan-catalogo-web/sitemap.xml
