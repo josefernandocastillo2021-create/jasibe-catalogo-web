@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=5">
-  <link rel="stylesheet" href="css/responsive.css?v=5">
+  <link rel="stylesheet" href="css/styles.css?v=6">
+  <link rel="stylesheet" href="css/responsive.css?v=6">
   <style>
     .detalle-contenedor {
       max-width: 1100px;
@@ -330,9 +330,10 @@
     </svg>
   </a>
 
-  <script src="js/whatsapp.js?v=5"></script>
-  <script src="js/carrito.js?v=5"></script>
-  <script src="js/galeria.js?v=5"></script>
+  <script src="js/util.js?v=6"></script>
+  <script src="js/whatsapp.js?v=6"></script>
+  <script src="js/carrito.js?v=6"></script>
+  <script src="js/galeria.js?v=6"></script>
   <script>
     const CACHE_KEY = 'jordan_productos';
     const API_URL = 'https://script.google.com/macros/s/AKfycbw4Tx2mVKd_l6GuImW6SDJl_ZyX_IXGmYKzmhtlhewszfkLCHb0qrqkX8Z7Ni8MbNQ6_Q/exec';
@@ -427,22 +428,21 @@
       const desc = oferta ? Math.round((1 - p.precio / p.precio_anterior) * 100) : 0;
       const fotoURL = p.foto1 ? convertirLinkDrive(p.foto1) : null;
       const fotoHTML = fotoURL
-        ? `<img src="${fotoURL}" alt="${p.nombre}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;foto-placeholder&quot;>Sin foto</div>'">`
+        ? `<img src="${escaparHTML(fotoURL)}" alt="${escaparHTML(p.nombre)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;foto-placeholder&quot;>Sin foto</div>'">`
         : '<div class="foto-placeholder"><span>Sin foto</span></div>';
-      const nombreEsc = (p.nombre || '').replace(/'/g, "\\'");
       const precioAnt = oferta ? `<span class="producto-card__precio-anterior">L ${p.precio_anterior.toLocaleString('es-HN')}</span>` : '';
       return `
-        <div class="producto-card" onclick="window.location='producto.html?id=${p.id}'">
+        <div class="producto-card" onclick="window.location='producto.html?id=${escaparArg(p.id)}'">
           ${oferta ? `<span class="producto-card__badge producto-card__badge--oferta">-${desc}%</span>` : ''}
           <div class="producto-card__foto">${fotoHTML}</div>
           <div class="producto-card__info">
-            <span class="producto-card__categoria">${p.categoria} · <span style="font-weight:600;color:#1B3A6B;">${p.id}</span></span>
-            <h3 class="producto-card__nombre">${p.nombre}</h3>
+            <span class="producto-card__categoria">${escaparHTML(p.categoria)} · <span style="font-weight:600;color:#1B3A6B;">${escaparHTML(p.id)}</span></span>
+            <h3 class="producto-card__nombre">${escaparHTML(p.nombre)}</h3>
             <div class="producto-card__precios">
               <span class="producto-card__precio ${oferta ? 'producto-card__precio--oferta' : ''}">L ${p.precio.toLocaleString('es-HN')}</span>
               ${precioAnt}
             </div>
-            <button class="producto-card__btn-cotizar" onclick="event.stopPropagation(); agregarAlCarrito('${p.id}','${nombreEsc}',${p.precio},1,'${fotoURL || ''}')">
+            <button class="producto-card__btn-cotizar" onclick="event.stopPropagation(); agregarAlCarrito('${escaparArg(p.id)}','${escaparArg(p.nombre)}',${p.precio},1,'${escaparArg(fotoURL || '')}')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
               Agregar a cotización
             </button>
@@ -471,7 +471,7 @@
         <div class="galeria" id="galeria-contenedor">
           <div class="galeria__miniaturas" id="miniaturas"></div>
           <div class="galeria__principal">
-            <img id="foto-principal" src="" alt="${p.nombre}" loading="eager">
+            <img id="foto-principal" src="" alt="${escaparHTML(p.nombre)}" loading="eager">
             <button class="galeria__nav galeria__nav--prev" onclick="fotoAnterior()" aria-label="Anterior">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
@@ -486,12 +486,12 @@
           <nav class="breadcrumb" aria-label="Ruta">
             <a href="index.html">Inicio</a>
             <span>›</span>
-            <a href="index.html">${p.categoria}</a>
+            <a href="index.html">${escaparHTML(p.categoria)}</a>
             <span>›</span>
-            <span>${p.nombre}</span>
+            <span>${escaparHTML(p.nombre)}</span>
           </nav>
 
-          <h1 class="producto-info__nombre">${p.nombre}</h1>
+          <h1 class="producto-info__nombre">${escaparHTML(p.nombre)}</h1>
 
           ${badges}
 
@@ -527,17 +527,17 @@
             </div>
             <div>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="20" height="20"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-              <span>Código: <strong>${p.id}</strong></span>
+              <span>Código: <strong>${escaparHTML(p.id)}</strong></span>
             </div>
           </div>
 
           ${p.regalia ? `
           <div class="pdp__regalia">
             <span class="pdp__regalia__label">🎁 Incluye de regalo</span>
-            <img src="${convertirLinkDrive(p.regalia)}" alt="Regalo incluido" class="pdp__regalia__img" loading="lazy">
+            <img src="${escaparHTML(convertirLinkDrive(p.regalia))}" alt="Regalo incluido" class="pdp__regalia__img" loading="lazy">
           </div>` : ''}
 
-          ${p.descripcion ? `<p class="producto-info__descripcion">${p.descripcion}</p>` : ''}
+          ${p.descripcion ? `<p class="producto-info__descripcion">${escaparHTML(p.descripcion)}</p>` : ''}
 
           <div class="producto-info__servicios">
             <span>📦 Envíos a nivel nacional</span>

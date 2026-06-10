@@ -434,12 +434,12 @@ function crearCardHTML(producto) {
   const fotoURL = producto.foto1 ? convertirLinkDrive(producto.foto1) : null;
 
   const fotoHTML = fotoURL
-    ? `<img src="${fotoURL}" alt="${producto.nombre}" loading="lazy" onerror="manejarErrorFoto(this, '${fotoID || ''}')">`
+    ? `<img src="${escaparHTML(fotoURL)}" alt="${escaparHTML(producto.nombre)}" loading="lazy" onerror="manejarErrorFoto(this, '${escaparArg(fotoID || '')}')">`
     : iconoSinFoto();
 
   const regaliaHTML = producto.regalia
     ? `<div class="regalia-overlay">
-        <img src="${convertirLinkDrive(producto.regalia)}" alt="Regalo incluido" class="regalia-overlay__img" loading="lazy">
+        <img src="${escaparHTML(convertirLinkDrive(producto.regalia))}" alt="Regalo incluido" class="regalia-overlay__img" loading="lazy">
       </div>`
     : '';
 
@@ -455,21 +455,19 @@ function crearCardHTML(producto) {
     ? `<span class="producto-card__precio-anterior">L ${producto.precio_anterior.toLocaleString('es-HN')}</span>`
     : '';
 
-  const nombreEsc = (producto.nombre || '').replace(/'/g, "\\'");
-
   return `
-    <div class="producto-card" onclick="window.location='producto.html?id=${producto.id}'">
+    <div class="producto-card" onclick="window.location='producto.html?id=${escaparArg(producto.id)}'">
       ${badgeOferta}
       ${badgeDestacado}
       <div class="producto-card__foto">${fotoHTML}${regaliaHTML}</div>
       <div class="producto-card__info">
-        <span class="producto-card__categoria">${producto.categoria} · <span style="font-weight:600;color:#1B3A6B;">${producto.id}</span></span>
-        <h3 class="producto-card__nombre">${producto.nombre}</h3>
+        <span class="producto-card__categoria">${escaparHTML(producto.categoria)} · <span style="font-weight:600;color:#1B3A6B;">${escaparHTML(producto.id)}</span></span>
+        <h3 class="producto-card__nombre">${escaparHTML(producto.nombre)}</h3>
         <div class="producto-card__precios">
           <span class="producto-card__precio ${tieneOferta ? 'producto-card__precio--oferta' : ''}">L ${producto.precio.toLocaleString('es-HN')}</span>
           ${precioAnterior}
         </div>
-        <button class="producto-card__btn-cotizar" onclick="event.stopPropagation(); agregarAlCarrito('${producto.id}', '${nombreEsc}', ${producto.precio}, 1, '${fotoURL || ''}')">
+        <button class="producto-card__btn-cotizar" onclick="event.stopPropagation(); agregarAlCarrito('${escaparArg(producto.id)}', '${escaparArg(producto.nombre)}', ${producto.precio}, 1, '${escaparArg(fotoURL || '')}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           Agregar a cotización
         </button>

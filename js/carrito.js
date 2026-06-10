@@ -96,24 +96,24 @@ function renderizarCarrito() {
 
   cont.innerHTML = items.map(i => {
     const fotoHTML = i.foto
-      ? `<img src="${i.foto}" alt="${i.nombre}" loading="lazy" onerror="this.style.display='none'">`
+      ? `<img src="${escaparHTML(i.foto)}" alt="${escaparHTML(i.nombre)}" loading="lazy" onerror="this.style.display='none'">`
       : iconoSinFotoCarrito();
     return `
     <div class="carrito-item">
       <div class="carrito-item__foto">${fotoHTML}</div>
       <div class="carrito-item__cuerpo">
-        <span class="carrito-item__nombre">${i.nombre}</span>
-        <span class="carrito-item__id">${i.id}</span>
+        <span class="carrito-item__nombre">${escaparHTML(i.nombre)}</span>
+        <span class="carrito-item__id">${escaparHTML(i.id)}</span>
         <div class="carrito-item__fila">
           <span class="carrito-item__precio">L ${i.precio.toLocaleString('es-HN')}</span>
           <div class="carrito-qty">
-            <button onclick="cambiarCantidadCarrito('${i.id}', -1)" aria-label="Restar">−</button>
+            <button onclick="cambiarCantidadCarrito('${escaparArg(i.id)}', -1)" aria-label="Restar">−</button>
             <span>${i.cantidad}</span>
-            <button onclick="cambiarCantidadCarrito('${i.id}', 1)" aria-label="Sumar">+</button>
+            <button onclick="cambiarCantidadCarrito('${escaparArg(i.id)}', 1)" aria-label="Sumar">+</button>
           </div>
         </div>
       </div>
-      <button class="carrito-item__quitar" onclick="quitarDelCarrito('${i.id}')" aria-label="Quitar">
+      <button class="carrito-item__quitar" onclick="quitarDelCarrito('${escaparArg(i.id)}')" aria-label="Quitar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
       </button>
     </div>`;
