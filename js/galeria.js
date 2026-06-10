@@ -1,14 +1,13 @@
 /* === galeria.js — Galería de fotos en página de detalle === */
 
 let fotoActiva = 0;
-let fotos = [];
+let fotosRaw = [];   // links originales del Sheet; se convierten al tamaño justo según el uso
 
 function iniciarGaleria(producto) {
-  fotos = [producto.foto1, producto.foto2, producto.foto3, producto.foto4]
-    .filter(f => f && f.trim() !== '')
-    .map(convertirLinkDriveGaleria);
+  fotosRaw = [producto.foto1, producto.foto2, producto.foto3, producto.foto4]
+    .filter(f => f && f.trim() !== '');
 
-  if (fotos.length === 0) {
+  if (fotosRaw.length === 0) {
     mostrarSinFotoGaleria();
     return;
   }
@@ -17,11 +16,10 @@ function iniciarGaleria(producto) {
   renderizarMiniaturas();
 }
 
-function convertirLinkDriveGaleria(url) {
-  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  return match
-    ? `https://lh3.googleusercontent.com/d/${match[1]}=w800`
-    : url;
+// Convierte un link de Drive al ancho pedido (foto grande 800px, miniaturas 200px)
+function urlGaleria(url, ancho) {
+  const match = (url || '').match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return match ? `https://lh3.googleusercontent.com/d/${match[1]}=w${ancho}` : url;
 }
 
 function renderizarFotoPrincipal(indice) {
@@ -29,7 +27,7 @@ function renderizarFotoPrincipal(indice) {
   const img = document.getElementById('foto-principal');
   if (!img) return;
 
-  img.src = fotos[indice];
+  img.src = urlGaleria(fotosRaw[indice], 800);
   img.alt = 'Foto del producto';
 
   document.querySelectorAll('.miniatura').forEach((m, i) => {
@@ -41,9 +39,9 @@ function renderizarMiniaturas() {
   const contenedor = document.getElementById('miniaturas');
   if (!contenedor) return;
 
-  contenedor.innerHTML = fotos.map((foto, i) =>
+  contenedor.innerHTML = fotosRaw.map((foto, i) =>
     `<button class="miniatura ${i === 0 ? 'activa' : ''}" onclick="renderizarFotoPrincipal(${i})">
-      <img src="${foto}" alt="Miniatura ${i + 1}" loading="lazy">
+      <img src="${urlGaleria(foto, 200)}" alt="Miniatura ${i + 1}" loading="lazy">
     </button>`
   ).join('');
 }
@@ -63,11 +61,11 @@ function mostrarSinFotoGaleria() {
 }
 
 function fotoAnterior() {
-  const nuevo = (fotoActiva - 1 + fotos.length) % fotos.length;
+  const nuevo = (fotoActiva - 1 + fotosRaw.length) % fotosRaw.length;
   renderizarFotoPrincipal(nuevo);
 }
 
 function fotoSiguiente() {
-  const nuevo = (fotoActiva + 1) % fotos.length;
+  const nuevo = (fotoActiva + 1) % fotosRaw.length;
   renderizarFotoPrincipal(nuevo);
 }

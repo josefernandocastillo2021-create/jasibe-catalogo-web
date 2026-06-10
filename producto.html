@@ -31,9 +31,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://lh3.googleusercontent.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=7">
-  <link rel="stylesheet" href="css/responsive.css?v=7">
+  <link rel="stylesheet" href="css/styles.css?v=8">
+  <link rel="stylesheet" href="css/responsive.css?v=8">
   <style>
     .detalle-contenedor {
       max-width: 1100px;
@@ -353,20 +354,20 @@
     </svg>
   </a>
 
-  <script src="js/config.js?v=7"></script>
-  <script src="js/util.js?v=7"></script>
-  <script src="js/whatsapp.js?v=7"></script>
-  <script src="js/carrito.js?v=7"></script>
-  <script src="js/galeria.js?v=7"></script>
+  <script src="js/config.js?v=8"></script>
+  <script src="js/util.js?v=8"></script>
+  <script src="js/whatsapp.js?v=8"></script>
+  <script src="js/carrito.js?v=8"></script>
+  <script src="js/galeria.js?v=8"></script>
   <script>
     const CACHE_KEY = 'jordan_productos';
     const API_URL = CONFIG.apiUrl;
     let TODOS = [];
     let PRODUCTO_ACTUAL = null;
 
-    function convertirLinkDrive(url) {
+    function convertirLinkDrive(url, ancho = 800) {
       const m = (url || '').match(/\/d\/([a-zA-Z0-9_-]+)/);
-      return m ? `https://lh3.googleusercontent.com/d/${m[1]}=w800` : url;
+      return m ? `https://lh3.googleusercontent.com/d/${m[1]}=w${ancho}` : url;
     }
 
     async function cargarDesdeSheets() {
@@ -435,7 +436,7 @@
 
     function agregarDetalleAlCarrito() {
       const n = parseInt(document.getElementById('cantidad-detalle').value) || 1;
-      const foto = PRODUCTO_ACTUAL.foto1 ? convertirLinkDrive(PRODUCTO_ACTUAL.foto1) : '';
+      const foto = PRODUCTO_ACTUAL.foto1 ? convertirLinkDrive(PRODUCTO_ACTUAL.foto1, 600) : '';
       agregarAlCarrito(PRODUCTO_ACTUAL.id, PRODUCTO_ACTUAL.nombre, PRODUCTO_ACTUAL.precio, n, foto);
     }
 
@@ -450,7 +451,7 @@
     function crearCardRelacionado(p) {
       const oferta = p.precio_anterior && p.precio_anterior > p.precio;
       const desc = oferta ? Math.round((1 - p.precio / p.precio_anterior) * 100) : 0;
-      const fotoURL = p.foto1 ? convertirLinkDrive(p.foto1) : null;
+      const fotoURL = p.foto1 ? convertirLinkDrive(p.foto1, 600) : null;
       const fotoHTML = fotoURL
         ? `<img src="${escaparHTML(fotoURL)}" alt="${escaparHTML(p.nombre)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;foto-placeholder&quot;>Sin foto</div>'">`
         : '<div class="foto-placeholder"><span>Sin foto</span></div>';
@@ -558,7 +559,7 @@
           ${p.regalia ? `
           <div class="pdp__regalia">
             <span class="pdp__regalia__label">🎁 Incluye de regalo</span>
-            <img src="${escaparHTML(convertirLinkDrive(p.regalia))}" alt="Regalo incluido" class="pdp__regalia__img" loading="lazy">
+            <img src="${escaparHTML(convertirLinkDrive(p.regalia, 200))}" alt="Regalo incluido" class="pdp__regalia__img" loading="lazy">
           </div>` : ''}
 
           ${p.descripcion ? `<p class="producto-info__descripcion">${escaparHTML(p.descripcion)}</p>` : ''}

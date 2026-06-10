@@ -431,7 +431,7 @@ function crearCardHTML(producto) {
     : 0;
 
   const fotoID = extraerIdDrive(producto.foto1);
-  const fotoURL = producto.foto1 ? convertirLinkDrive(producto.foto1) : null;
+  const fotoURL = producto.foto1 ? convertirLinkDrive(producto.foto1, 600) : null;
 
   const fotoHTML = fotoURL
     ? `<img src="${escaparHTML(fotoURL)}" alt="${escaparHTML(producto.nombre)}" loading="lazy" onerror="manejarErrorFoto(this, '${escaparArg(fotoID || '')}')">`
@@ -439,7 +439,7 @@ function crearCardHTML(producto) {
 
   const regaliaHTML = producto.regalia
     ? `<div class="regalia-overlay">
-        <img src="${escaparHTML(convertirLinkDrive(producto.regalia))}" alt="Regalo incluido" class="regalia-overlay__img" loading="lazy">
+        <img src="${escaparHTML(convertirLinkDrive(producto.regalia, 200))}" alt="Regalo incluido" class="regalia-overlay__img" loading="lazy">
       </div>`
     : '';
 
@@ -483,10 +483,11 @@ function extraerIdDrive(url) {
   return match ? match[1] : null;
 }
 
-// URL principal: CDN de Google (lh3), más rápido y sin throttle
-function convertirLinkDrive(url) {
+// URL principal: CDN de Google (lh3), más rápido y sin throttle.
+// 'ancho' = tamaño que se pide; pedir el tamaño justo ahorra datos.
+function convertirLinkDrive(url, ancho = 800) {
   const id = extraerIdDrive(url);
-  return id ? `https://lh3.googleusercontent.com/d/${id}=w800` : url;
+  return id ? `https://lh3.googleusercontent.com/d/${id}=w${ancho}` : url;
 }
 
 function convertirLinkDriveBanner(url) {
