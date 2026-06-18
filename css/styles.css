@@ -1,5 +1,5 @@
 /* =============================================
-   ALMACÉN EL JORDÁN — Estilos Principales
+   JASIBE — Estilos Principales
    ============================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
@@ -9,8 +9,8 @@
   /* El sitio está diseñado para modo claro: evita que el navegador
      invierta los colores cuando el celular está en modo oscuro */
   color-scheme: light only;
-  --color-primario: #1B3A6B;
-  --color-primario-hover: #142d55;
+  --color-primario: #D90000;
+  --color-primario-hover: #B80000;
   --color-secundario: #F5A623;
   --color-success: #28A745;
   --color-success-hover: #218838;
@@ -48,13 +48,13 @@ button { cursor: pointer; border: none; font-family: inherit; }
   top: 0; left: 0; right: 0;
   z-index: 1000;
   height: var(--navbar-height);
-  background: var(--color-blanco);
+  background: #000000;
   display: flex;
   align-items: center;
   padding: 0 24px;
   gap: 16px;
   border-bottom: 2px solid var(--color-primario);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
 .navbar__logo {
@@ -90,7 +90,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   font-family: inherit;
   outline: none;
   color: var(--color-texto);
-  background: var(--color-fondo);
+  background: var(--color-blanco);
   transition: border-color var(--transicion);
 }
 
@@ -120,7 +120,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   display: none;
   background: none;
   border: none;
-  color: var(--color-primario);
+  color: var(--color-blanco);
   font-size: 24px;
   padding: 4px;
   flex-shrink: 0;
@@ -131,7 +131,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   position: relative;
   background: none;
   border: none;
-  color: var(--color-primario);
+  color: var(--color-blanco);
   cursor: pointer;
   padding: 4px;
   flex-shrink: 0;
