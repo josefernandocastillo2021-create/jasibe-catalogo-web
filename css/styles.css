@@ -104,7 +104,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   right: 5px;
   top: 50%;
   transform: translateY(-50%);
-  background: var(--color-secundario);
+  background: var(--color-primario);
   border: none;
   border-radius: 50%;
   width: 30px;
