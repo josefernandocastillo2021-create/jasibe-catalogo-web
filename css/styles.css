@@ -827,7 +827,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   margin-top: auto;
   width: 100%;
   padding: 10px;
-  background: var(--color-primario);
+  background: #000000;
   color: var(--color-blanco);
   border: none;
   border-radius: 6px;
@@ -842,7 +842,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   transition: background var(--transicion);
 }
 
-.producto-card__btn-cotizar:hover { background: var(--color-primario-hover); }
+.producto-card__btn-cotizar:hover { background: #333333; }
 
 /* === Overlay de regalía en tarjeta === */
 .producto-card__foto { position: relative; }
