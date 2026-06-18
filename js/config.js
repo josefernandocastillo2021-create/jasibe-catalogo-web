@@ -7,7 +7,7 @@ const CONFIG = {
   // Cómo se muestra el número en pantalla
   whatsappDisplay: '9479-5701',
   // URL del Google Apps Script (termina en /exec)
-  apiUrl: 'https://script.google.com/macros/s/AKfycbw4Tx2mVKd_l6GuImW6SDJl_ZyX_IXGmYKzmhtlhewszfkLCHb0qrqkX8Z7Ni8MbNQ6_Q/exec',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbykmiuV_XFPOqE7qDzbji1lYmqRMC1yuZa3Pc6Caoa-OseiHWxO6qG-Hm4_2ImzDj1X/exec',
 };
 
 /* Aplica el número a los links y textos estáticos del HTML marcados con clases:
