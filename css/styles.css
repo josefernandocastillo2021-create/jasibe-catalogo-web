@@ -507,7 +507,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
 .seccion-titulo {
   font-size: 20px;
   font-weight: 700;
-  color: var(--color-primario);
+  color: var(--color-texto);
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -533,12 +533,12 @@ button { cursor: pointer; border: none; font-family: inherit; }
 
 .filtros-bar__info {
   font-size: 13px;
-  color: var(--color-texto-secundario);
+  color: var(--color-texto);
 }
 
 .filtros-bar__info span {
   font-weight: 700;
-  color: var(--color-primario);
+  color: var(--color-texto);
 }
 
 /* === Destacados (carrusel horizontal, fondo amarillo) === */
