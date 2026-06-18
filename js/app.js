@@ -1,7 +1,7 @@
 /* === app.js — Lógica principal del catálogo === */
 
-const CACHE_KEY = 'jordan_productos';
-const CACHE_KEY_BANNERS = 'jordan_banners';
+const CACHE_KEY = 'jasibe_productos';
+const CACHE_KEY_BANNERS = 'jasibe_banners';
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutos en ms
 const API_URL = CONFIG.apiUrl;
 
@@ -39,36 +39,6 @@ const SUCURSALES = [
     ciudad: 'El Progreso, Yoro',
     principal: true,
     mapa: 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d492358.3339975457!2d-87.8093142!3d15.4008664!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f663f7fbaec5ecf%3A0x8116865eecc85fb5!2sAlmacen%20El%20Jordan!5e0!3m2!1ses!2shn!4v1780740742800!5m2!1ses!2shn',
-  },
-  {
-    nombre: 'SPS Centro',
-    ciudad: 'San Pedro Sula',
-    principal: false,
-    mapa: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d492120.41561476374!2d-88.63610811093753!3d15.501058!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f665b984ce4848d%3A0x662b5c5c94a7432f!2sAlmacen%20El%20Jordan!5e0!3m2!1ses!2shn!4v1780741012193!5m2!1ses!2shn',
-  },
-  {
-    nombre: 'SPS Barrio La Guardia',
-    ciudad: 'San Pedro Sula',
-    principal: false,
-    mapa: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d492120.41561476374!2d-88.63610811093753!3d15.501058!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f665da9b1cdf57f%3A0xaaecaa80f3d5d96!2sAlmacen%20El%20Jordan!5e0!3m2!1ses!2shn!4v1780741091703!5m2!1ses!2shn',
-  },
-  {
-    nombre: 'Comayagua',
-    ciudad: 'Comayagua',
-    principal: false,
-    mapa: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7727.67833450933!2d-87.63814561458582!3d14.436430645072146!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f6585bd5409b7e1%3A0xc9c397e1a0d67d3d!2zQWxtYWPDqW4gRWwgSm9yZMOhbiDigKIgQ29tYXlhZ3Vh!5e0!3m2!1ses!2shn!4v1780741273203!5m2!1ses!2shn',
-  },
-  {
-    nombre: 'Santa Cruz de Yojoa',
-    ciudad: 'Cortés',
-    principal: false,
-    mapa: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d492120.41561476374!2d-88.63610811093753!3d15.501058!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f65df2343cd1fcd%3A0xf08f9bdcd0901181!2sAlmacen%20El%20Jordan!5e0!3m2!1ses!2shn!4v1780741136346!5m2!1ses!2shn',
-  },
-  {
-    nombre: 'Tela',
-    ciudad: 'Atlántida',
-    principal: false,
-    mapa: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d492120.41561476374!2d-88.63610811093753!3d15.501058!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f687db6262b9e09%3A0xdd2da9c242dadbd8!2sAlmacen%20El%20Jord%C3%A1n%20%7C%20Tela!5e0!3m2!1ses!2shn!4v1780741190312!5m2!1ses!2shn',
   },
 ];
 

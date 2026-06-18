@@ -3,9 +3,9 @@
 
 const CONFIG = {
   // Número de WhatsApp en formato internacional, sin "+" ni espacios (504 + número)
-  whatsapp: '50492265826',
+  whatsapp: '50494795701',
   // Cómo se muestra el número en pantalla
-  whatsappDisplay: '9226-5826',
+  whatsappDisplay: '9479-5701',
   // URL del Google Apps Script (termina en /exec)
   apiUrl: 'https://script.google.com/macros/s/AKfycbw4Tx2mVKd_l6GuImW6SDJl_ZyX_IXGmYKzmhtlhewszfkLCHb0qrqkX8Z7Ni8MbNQ6_Q/exec',
 };

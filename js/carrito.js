@@ -1,7 +1,7 @@
 /* === carrito.js — Carrito de cotización (compartido index + producto) ===
    No procesa pagos: junta productos y envía la lista por WhatsApp. */
 
-const CARRITO_KEY = 'jordan_carrito';
+const CARRITO_KEY = 'jasibe_carrito';
 
 /* === Estado === */
 function obtenerCarrito() {
