@@ -14,15 +14,26 @@ function guardarCarrito(items) {
   actualizarContadorCarrito();
 }
 
-function agregarAlCarrito(id, nombre, precio, cantidad, foto) {
+function agregarAlCarrito(id, nombre, precio, cantidad, foto, stock) {
   cantidad = parseInt(cantidad) || 1;
+  // tope = stock disponible; sin stock definido (null/''/undefined) => sin límite
+  const tope = (stock === undefined || stock === null || stock === '') ? Infinity : Number(stock);
   const items = obtenerCarrito();
   const existente = items.find(i => i.id === id);
-  if (existente) existente.cantidad += cantidad;
-  else items.push({ id, nombre, precio: Number(precio) || 0, cantidad, foto: foto || '' });
+  const actual = existente ? existente.cantidad : 0;
+  let nueva = actual + cantidad;
+  let capado = false;
+  if (nueva > tope) { nueva = tope; capado = true; }
+
+  if (existente) {
+    existente.cantidad = nueva;
+    existente.stock = (tope === Infinity) ? null : tope;
+  } else {
+    items.push({ id, nombre, precio: Number(precio) || 0, cantidad: nueva, foto: foto || '', stock: (tope === Infinity) ? null : tope });
+  }
   guardarCarrito(items);
   renderizarCarrito();
-  mostrarToast(`${nombre} agregado a la cotización`);
+  mostrarToast(capado ? `Solo hay ${tope} unidades disponibles` : `${nombre} agregado a la cotización`);
 }
 
 function quitarDelCarrito(id) {
@@ -34,8 +45,11 @@ function cambiarCantidadCarrito(id, delta) {
   const items = obtenerCarrito();
   const it = items.find(i => i.id === id);
   if (!it) return;
-  it.cantidad += delta;
-  if (it.cantidad <= 0) return quitarDelCarrito(id);
+  let nueva = it.cantidad + delta;
+  const tope = (it.stock === undefined || it.stock === null) ? Infinity : Number(it.stock);
+  if (nueva <= 0) return quitarDelCarrito(id);
+  if (nueva > tope) { nueva = tope; mostrarToast(`Solo hay ${tope} unidades disponibles`); }
+  it.cantidad = nueva;
   guardarCarrito(items);
   renderizarCarrito();
 }

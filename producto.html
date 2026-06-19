@@ -469,13 +469,15 @@
       const input = document.getElementById('cantidad-detalle');
       let n = (parseInt(input.value) || 1) + delta;
       if (n < 1) n = 1;
+      const tope = (PRODUCTO_ACTUAL && PRODUCTO_ACTUAL.cantidad != null) ? PRODUCTO_ACTUAL.cantidad : Infinity;
+      if (n > tope) { n = tope; mostrarToast(`Solo hay ${tope} unidades disponibles`); }
       input.value = n;
     }
 
     function agregarDetalleAlCarrito() {
       const n = parseInt(document.getElementById('cantidad-detalle').value) || 1;
       const foto = PRODUCTO_ACTUAL.foto1 ? convertirLinkDrive(PRODUCTO_ACTUAL.foto1, 600) : '';
-      agregarAlCarrito(PRODUCTO_ACTUAL.id, PRODUCTO_ACTUAL.nombre, PRODUCTO_ACTUAL.precio, n, foto);
+      agregarAlCarrito(PRODUCTO_ACTUAL.id, PRODUCTO_ACTUAL.nombre, PRODUCTO_ACTUAL.precio, n, foto, PRODUCTO_ACTUAL.cantidad);
     }
 
     /* === Productos relacionados (misma categoría) === */
@@ -501,7 +503,7 @@
       const stockRel = etiquetaStock(p.cantidad);
       const botonRel = agotadoRel
         ? `<button class="producto-card__btn-cotizar producto-card__btn-cotizar--agotado" disabled onclick="event.stopPropagation();">Agotado</button>`
-        : `<button class="producto-card__btn-cotizar" onclick="event.stopPropagation(); agregarAlCarrito('${escaparArg(p.id)}','${escaparArg(p.nombre)}',${p.precio},1,'${escaparArg(fotoURL || '')}')">
+        : `<button class="producto-card__btn-cotizar" onclick="event.stopPropagation(); agregarAlCarrito('${escaparArg(p.id)}','${escaparArg(p.nombre)}',${p.precio},1,'${escaparArg(fotoURL || '')}',${p.cantidad === null ? 'null' : p.cantidad})">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
               Añadir al carrito
             </button>`;
