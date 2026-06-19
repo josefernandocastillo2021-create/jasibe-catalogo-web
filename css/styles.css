@@ -614,7 +614,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   width: max-content;
   overflow: visible;
   scroll-snap-type: none;
-  animation: destacados-scroll 28s linear infinite;
+  animation: destacados-scroll 45s linear infinite;
 }
 
 .destacados-track--animado:hover,
