@@ -1243,7 +1243,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   display: none;
   position: fixed;
   inset: 0;
-  background: var(--color-primario);
+  background: #000000;
   z-index: 1200;
   flex-direction: column;
   overflow-y: auto;
