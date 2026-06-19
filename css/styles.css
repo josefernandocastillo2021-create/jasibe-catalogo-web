@@ -845,6 +845,49 @@ button { cursor: pointer; border: none; font-family: inherit; }
 
 .producto-card__btn-cotizar:hover { background: #333333; }
 
+/* === Etiqueta de stock en tarjetas === */
+.stock {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.stock--bajo { color: var(--color-primario); }
+.stock--agotado {
+  background: #777;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Botón "Agotado" en tarjetas */
+.producto-card__btn-cotizar--agotado {
+  background: #bbb;
+  cursor: not-allowed;
+}
+.producto-card__btn-cotizar--agotado:hover { background: #bbb; }
+
+/* === Stock en página de detalle === */
+.pdp__stock {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 4px 0 14px;
+}
+.pdp__stock--bajo { color: var(--color-primario); }
+.pdp__stock--agotado {
+  display: inline-block;
+  background: #777;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 6px;
+}
+.pdp__add--agotado {
+  background: #bbb;
+  cursor: not-allowed;
+  width: 100%;
+}
+.pdp__add--agotado:hover { background: #bbb; }
+
 /* === Overlay de regalía en tarjeta === */
 .producto-card__foto { position: relative; }
 

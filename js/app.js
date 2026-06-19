@@ -161,6 +161,7 @@ async function cargarDesdeSheets() {
       activo:          f.activo === true || String(f.activo).toUpperCase() === 'TRUE',
       destacado:       f.destacado === true || String(f.destacado).toUpperCase() === 'TRUE',
       regalia:         String(f.regalia || ''),
+      cantidad:        parsearCantidad(f.cantidad),
     };
   });
 }
@@ -425,6 +426,18 @@ function crearCardHTML(producto) {
     ? `<span class="producto-card__precio-anterior">L ${producto.precio_anterior.toLocaleString('es-HN')}</span>`
     : '';
 
+  const agotado = estaAgotado(producto.cantidad);
+  const stockHTML = etiquetaStock(producto.cantidad);
+
+  const botonHTML = agotado
+    ? `<button class="producto-card__btn-cotizar producto-card__btn-cotizar--agotado" disabled onclick="event.stopPropagation();">
+          Agotado
+        </button>`
+    : `<button class="producto-card__btn-cotizar" onclick="event.stopPropagation(); agregarAlCarrito('${escaparArg(producto.id)}', '${escaparArg(producto.nombre)}', ${producto.precio}, 1, '${escaparArg(fotoURL || '')}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Añadir al carrito
+        </button>`;
+
   return `
     <div class="producto-card" onclick="window.location='producto.html?id=${escaparArg(producto.id)}'">
       ${badgeOferta}
@@ -437,10 +450,8 @@ function crearCardHTML(producto) {
           <span class="producto-card__precio ${tieneOferta ? 'producto-card__precio--oferta' : ''}">L ${producto.precio.toLocaleString('es-HN')}</span>
           ${precioAnterior}
         </div>
-        <button class="producto-card__btn-cotizar" onclick="event.stopPropagation(); agregarAlCarrito('${escaparArg(producto.id)}', '${escaparArg(producto.nombre)}', ${producto.precio}, 1, '${escaparArg(fotoURL || '')}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-          Añadir al carrito
-        </button>
+        ${stockHTML}
+        ${botonHTML}
       </div>
     </div>
   `;
