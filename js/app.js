@@ -276,13 +276,14 @@ function normalizar(texto) {
 function filtrarProductos() {
   const termino = normalizar(terminoBusqueda);
   return todosLosProductos.filter(p => {
+    const tieneFoto = p.foto1 && p.foto1.trim() !== '';
     const coincideCategoria = categoriaActiva === 'Todos' || p.categoria === categoriaActiva;
     const coincideBusqueda = termino === '' ||
       normalizar(p.nombre).includes(termino) ||
       normalizar(p.id).includes(termino) ||
       normalizar(p.categoria).includes(termino) ||
       normalizar(p.descripcion).includes(termino);
-    return coincideCategoria && coincideBusqueda;
+    return tieneFoto && coincideCategoria && coincideBusqueda;
   });
 }
 
