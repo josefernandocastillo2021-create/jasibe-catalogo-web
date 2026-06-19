@@ -1303,8 +1303,8 @@ button { cursor: pointer; border: none; font-family: inherit; }
 
 .menu-movil__lista .categoria-btn.activo,
 .menu-movil__lista .categoria-btn:hover {
-  background: var(--color-secundario);
-  border-color: var(--color-secundario);
+  background: var(--color-primario);
+  border-color: var(--color-primario);
   color: var(--color-blanco);
   font-weight: 700;
 }
