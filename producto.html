@@ -33,8 +33,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://lh3.googleusercontent.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=11">
-  <link rel="stylesheet" href="css/responsive.css?v=11">
+  <link rel="stylesheet" href="css/styles.css?v=12">
+  <link rel="stylesheet" href="css/responsive.css?v=12">
   <style>
     .detalle-contenedor {
       max-width: 1100px;
@@ -390,11 +390,11 @@
     </svg>
   </a>
 
-  <script src="js/config.js?v=11"></script>
-  <script src="js/util.js?v=11"></script>
-  <script src="js/whatsapp.js?v=11"></script>
-  <script src="js/carrito.js?v=11"></script>
-  <script src="js/galeria.js?v=11"></script>
+  <script src="js/config.js?v=12"></script>
+  <script src="js/util.js?v=12"></script>
+  <script src="js/whatsapp.js?v=12"></script>
+  <script src="js/carrito.js?v=12"></script>
+  <script src="js/galeria.js?v=12"></script>
   <script>
     const CACHE_KEY = 'jasibe_productos';
     const API_URL = CONFIG.apiUrl;
@@ -651,13 +651,16 @@
     /* === Contador de oferta === */
     function parsearFecha(valor) {
       if (!valor) return null;
-      let d = new Date(valor);                       // ISO (Date del Sheet) o YYYY-MM-DD
-      if (!isNaN(d.getTime())) return d;
-      const m = String(valor).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/); // DD/MM/YYYY
+      // 1) DD/MM/YYYY explícito PRIMERO (evita que JS lo lea como MM/DD/YYYY).
+      //    La oferta termina al final de ese día (23:59:59).
+      const m = String(valor).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
       if (m) {
-        d = new Date(+m[3], +m[2] - 1, +m[1], 23, 59, 59);
+        const d = new Date(+m[3], +m[2] - 1, +m[1], 23, 59, 59);
         if (!isNaN(d.getTime())) return d;
       }
+      // 2) ISO / objeto Date del Sheet / YYYY-MM-DD
+      const d2 = new Date(valor);
+      if (!isNaN(d2.getTime())) return d2;
       return null;
     }
 
