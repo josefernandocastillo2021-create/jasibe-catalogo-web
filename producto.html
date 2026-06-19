@@ -33,8 +33,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://lh3.googleusercontent.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=10">
-  <link rel="stylesheet" href="css/responsive.css?v=10">
+  <link rel="stylesheet" href="css/styles.css?v=11">
+  <link rel="stylesheet" href="css/responsive.css?v=11">
   <style>
     .detalle-contenedor {
       max-width: 1100px;
@@ -283,6 +283,42 @@
     }
     .pdp__add:hover { background: var(--color-primario-hover); }
 
+    /* === Contador de oferta === */
+    .pdp__timer {
+      background: #000;
+      border: 2px solid var(--color-primario);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 4px 0 4px;
+    }
+    .pdp__timer__label {
+      display: block;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .pdp__timer__cajas { display: flex; gap: 8px; justify-content: center; }
+    .timer-caja {
+      display: flex; flex-direction: column; align-items: center;
+      background: var(--color-primario);
+      border-radius: 8px;
+      padding: 8px 0;
+      min-width: 58px;
+    }
+    .timer-caja strong {
+      font-size: 24px; font-weight: 700; color: #fff; line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .timer-caja span {
+      font-size: 10px; color: rgba(255,255,255,0.85); text-transform: uppercase;
+      letter-spacing: 0.5px; margin-top: 4px;
+    }
+    .pdp__timer__fin {
+      display: block; color: #fff; font-weight: 700; text-align: center; font-size: 14px;
+    }
+
     .pdp__info {
       display: flex; flex-direction: column; gap: 10px;
       padding: 16px; background: var(--color-fondo); border-radius: 8px;
@@ -354,11 +390,11 @@
     </svg>
   </a>
 
-  <script src="js/config.js?v=10"></script>
-  <script src="js/util.js?v=10"></script>
-  <script src="js/whatsapp.js?v=10"></script>
-  <script src="js/carrito.js?v=10"></script>
-  <script src="js/galeria.js?v=10"></script>
+  <script src="js/config.js?v=11"></script>
+  <script src="js/util.js?v=11"></script>
+  <script src="js/whatsapp.js?v=11"></script>
+  <script src="js/carrito.js?v=11"></script>
+  <script src="js/galeria.js?v=11"></script>
   <script>
     const CACHE_KEY = 'jasibe_productos';
     const API_URL = CONFIG.apiUrl;
@@ -391,6 +427,7 @@
           destacado:       f.destacado === true || String(f.destacado).toUpperCase() === 'TRUE',
           regalia:         String(f.regalia || ''),
           cantidad:        parsearCantidad(f.cantidad),
+          final_oferta:    f.final_oferta || '',
         };
       });
     }
@@ -498,6 +535,20 @@
           ? `<p class="pdp__stock pdp__stock--bajo">🔥 ¡Solo quedan ${p.cantidad}!</p>`
           : '';
 
+      // Contador de oferta (solo si hay fecha futura en FINAL DE OFERTA)
+      const fechaFin = parsearFecha(p.final_oferta);
+      const mostrarTimer = fechaFin && fechaFin.getTime() > Date.now();
+      const timerHTML = mostrarTimer ? `
+        <div class="pdp__timer" id="oferta-timer">
+          <span class="pdp__timer__label">⏰ La oferta termina en:</span>
+          <div class="pdp__timer__cajas">
+            <div class="timer-caja"><strong id="t-dias">00</strong><span>Días</span></div>
+            <div class="timer-caja"><strong id="t-horas">00</strong><span>Horas</span></div>
+            <div class="timer-caja"><strong id="t-min">00</strong><span>Min</span></div>
+            <div class="timer-caja"><strong id="t-seg">00</strong><span>Seg</span></div>
+          </div>
+        </div>` : '';
+
       const badges = tieneOferta ? `
         <div class="pdp__badges">
           <span class="pdp__ahorro">Ahorras L ${ahorro.toLocaleString('es-HN')}</span>
@@ -541,9 +592,9 @@
             <span class="producto-info__precio ${tieneOferta ? 'producto-info__precio--oferta' : ''}">L ${p.precio.toLocaleString('es-HN')}</span>
             ${precioAnterior}
           </div>
-          <p class="pdp__nota">Precio válido hasta agotar existencias</p>
-
           ${stockDetalleHTML}
+
+          ${timerHTML}
 
           ${agotado
             ? `<div class="pdp__compra">
@@ -589,13 +640,49 @@
 
           <div class="producto-info__servicios">
             <span>📦 Envíos a nivel nacional</span>
-            <span>💳 Sistema de crédito — disponible en compras desde L 3,000</span>
-            <span>🗓️ Sistema de apartado con solo el 10% del valor del producto</span>
           </div>
         </div>
       `;
 
       iniciarGaleria(p);
+      if (mostrarTimer) iniciarContador(fechaFin);
+    }
+
+    /* === Contador de oferta === */
+    function parsearFecha(valor) {
+      if (!valor) return null;
+      let d = new Date(valor);                       // ISO (Date del Sheet) o YYYY-MM-DD
+      if (!isNaN(d.getTime())) return d;
+      const m = String(valor).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/); // DD/MM/YYYY
+      if (m) {
+        d = new Date(+m[3], +m[2] - 1, +m[1], 23, 59, 59);
+        if (!isNaN(d.getTime())) return d;
+      }
+      return null;
+    }
+
+    let timerInterval = null;
+    function iniciarContador(fechaFin) {
+      const cont = document.getElementById('oferta-timer');
+      if (!cont) return;
+      if (timerInterval) clearInterval(timerInterval);
+      const dosDig = n => String(n).padStart(2, '0');
+      function tick() {
+        const diff = fechaFin.getTime() - Date.now();
+        if (diff <= 0) {
+          clearInterval(timerInterval);
+          cont.innerHTML = '<span class="pdp__timer__fin">⏰ Oferta finalizada</span>';
+          return;
+        }
+        const dias  = Math.floor(diff / 86400000);
+        const horas = Math.floor((diff % 86400000) / 3600000);
+        const min   = Math.floor((diff % 3600000) / 60000);
+        const seg   = Math.floor((diff % 60000) / 1000);
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = dosDig(v); };
+        set('t-dias', dias); set('t-horas', horas); set('t-min', min); set('t-seg', seg);
+      }
+      tick();
+      timerInterval = setInterval(tick, 1000);
     }
 
     cargarProducto();

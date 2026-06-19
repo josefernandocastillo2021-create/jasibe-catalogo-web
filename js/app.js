@@ -162,6 +162,7 @@ async function cargarDesdeSheets() {
       destacado:       f.destacado === true || String(f.destacado).toUpperCase() === 'TRUE',
       regalia:         String(f.regalia || ''),
       cantidad:        parsearCantidad(f.cantidad),
+      final_oferta:    f.final_oferta || '',
     };
   });
 }
