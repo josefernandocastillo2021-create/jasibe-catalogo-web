@@ -541,9 +541,10 @@ button { cursor: pointer; border: none; font-family: inherit; }
   color: var(--color-texto);
 }
 
-/* === Destacados (carrusel horizontal, fondo amarillo) === */
+/* === Destacados (carrusel horizontal) === */
 .destacados {
-  background: var(--color-secundario);
+  background: var(--color-blanco);
+  border: 2px solid var(--color-primario);
   border-radius: 14px;
   padding: 20px;
   margin-bottom: 32px;
@@ -573,8 +574,8 @@ button { cursor: pointer; border: none; font-family: inherit; }
   height: 38px;
   border-radius: 50%;
   border: none;
-  background: rgba(255,255,255,0.95);
-  color: var(--color-primario);
+  background: var(--color-primario);
+  color: var(--color-blanco);
   cursor: pointer;
   display: flex;
   align-items: center;
