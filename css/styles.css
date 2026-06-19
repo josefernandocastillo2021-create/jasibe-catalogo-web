@@ -602,6 +602,32 @@ button { cursor: pointer; border: none; font-family: inherit; }
   scroll-snap-align: start;
 }
 
+/* === Cinta infinita (solo cuando hay > 4 destacados) === */
+@keyframes destacados-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.destacados--animado { overflow: hidden; }
+
+.destacados-track--animado {
+  width: max-content;
+  overflow: visible;
+  scroll-snap-type: none;
+  animation: destacados-scroll 28s linear infinite;
+}
+
+.destacados-track--animado:hover,
+.destacados-track--animado.pausado {
+  animation-play-state: paused;
+}
+
+.destacados-track--animado .producto-card {
+  flex: 0 0 200px;
+  width: 200px;
+  scroll-snap-align: none;
+}
+
 /* Dentro del carrusel "Destacados" el badge ⭐ es redundante: se oculta */
 .destacados-track .producto-card__badge--destacado { display: none; }
 

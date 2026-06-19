@@ -311,8 +311,29 @@ function renderizarDestacados() {
 
   seccion.style.display = 'block';
   const grid = document.getElementById('destacados-grid');
-  grid.innerHTML = destacados.map(p => crearCardHTML(p)).join('');
-  actualizarNavDestacados();
+  const nav  = document.querySelector('.destacados__nav');
+  const html = destacados.map(p => crearCardHTML(p)).join('');
+
+  if (destacados.length > 4) {
+    // Duplicar las tarjetas para que el loop sea invisible al volver al inicio
+    grid.innerHTML = html + html;
+    grid.classList.add('destacados-track--animado');
+    seccion.classList.add('destacados--animado');
+    if (nav) nav.style.display = 'none';
+
+    // Pausar al tocar en móvil (agregar listeners solo una vez)
+    if (!grid.dataset.animInit) {
+      grid.dataset.animInit = '1';
+      grid.addEventListener('touchstart', () => grid.classList.add('pausado'),    { passive: true });
+      grid.addEventListener('touchend',   () => grid.classList.remove('pausado'));
+    }
+  } else {
+    grid.innerHTML = html;
+    grid.classList.remove('destacados-track--animado');
+    seccion.classList.remove('destacados--animado');
+    if (nav) nav.style.display = '';
+    actualizarNavDestacados();
+  }
 }
 
 /* Muestra las flechas solo si hay productos suficientes para deslizar */
