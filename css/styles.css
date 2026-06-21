@@ -637,6 +637,11 @@ button { cursor: pointer; border: none; font-family: inherit; }
   .destacados-track .producto-card {
     flex: 0 0 calc((100% - 20px) / 3);
   }
+  /* En modo animado, ancho fijo para evitar que % calcule sobre max-content */
+  .destacados-track--animado .producto-card {
+    flex: 0 0 145px;
+    width: 145px;
+  }
   /* Círculo de % más pequeño en el carrusel de destacados (tarjetas chicas) */
   .destacados-track .producto-card__badge--oferta {
     width: 32px;
