@@ -296,6 +296,56 @@ function renderizarTodo() {
   actualizarTitulo();
 }
 
+/* === Drag táctil en la cinta de destacados === */
+function iniciarDragDestacados(grid) {
+  const DURACION = 45; // segundos — debe coincidir con el CSS
+  let dragging = false;
+  let startX   = 0;
+  let baseX    = 0;
+
+  function translateActual() {
+    const m = new DOMMatrix(window.getComputedStyle(grid).transform);
+    return isNaN(m.m41) ? 0 : m.m41;
+  }
+
+  function mitad() { return grid.scrollWidth / 2; }
+
+  function normalizar(x) {
+    const h = mitad();
+    while (x > 0)  x -= h;
+    while (x < -h) x += h;
+    return x;
+  }
+
+  function reanudar(x) {
+    const progreso = Math.abs(normalizar(x)) / mitad();
+    const delay    = -(progreso * DURACION);
+    grid.style.transform = '';
+    grid.style.animation = `destacados-scroll ${DURACION}s linear ${delay}s infinite`;
+  }
+
+  grid.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    dragging = true;
+    startX   = e.touches[0].clientX;
+    baseX    = translateActual();
+    grid.style.animation  = 'none';
+    grid.style.transform  = `translateX(${baseX}px)`;
+  }, { passive: true });
+
+  grid.addEventListener('touchmove', e => {
+    if (!dragging || e.touches.length !== 1) return;
+    const x = normalizar(baseX + (e.touches[0].clientX - startX));
+    grid.style.transform = `translateX(${x}px)`;
+  }, { passive: true });
+
+  grid.addEventListener('touchend', () => {
+    if (!dragging) return;
+    dragging = false;
+    reanudar(translateActual());
+  });
+}
+
 function renderizarDestacados() {
   const seccion = document.getElementById('seccion-destacados');
   if (!seccion) return;
@@ -321,11 +371,10 @@ function renderizarDestacados() {
     seccion.classList.add('destacados--animado');
     if (nav) nav.style.display = 'none';
 
-    // Pausar al tocar en móvil (agregar listeners solo una vez)
+    // Drag táctil + reanudación desde posición actual (solo una vez)
     if (!grid.dataset.animInit) {
       grid.dataset.animInit = '1';
-      grid.addEventListener('touchstart', () => grid.classList.add('pausado'),    { passive: true });
-      grid.addEventListener('touchend',   () => grid.classList.remove('pausado'));
+      iniciarDragDestacados(grid);
     }
   } else {
     grid.innerHTML = html;
