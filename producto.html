@@ -503,13 +503,16 @@
     }
 
     async function compartirProducto(nombre) {
-      const url = window.location.href;
+      const id = new URLSearchParams(window.location.search).get('id') || '';
+      // URL con OG tags correctas para preview en WhatsApp/redes
+      const urlCompartir = `${CONFIG.apiUrl}?compartir=${encodeURIComponent(id)}`;
+      const urlDirecta   = window.location.href;
       if (navigator.share) {
         try {
-          await navigator.share({ title: nombre, text: `Mira este producto en Jasibe: ${nombre}`, url });
+          await navigator.share({ title: `${nombre} — Jasibe`, text: `Mira este producto en Jasibe: ${nombre}`, url: urlCompartir });
         } catch (_) {}
       } else {
-        await navigator.clipboard.writeText(url);
+        await navigator.clipboard.writeText(urlDirecta);
         mostrarToast('Link copiado al portapapeles');
       }
     }
