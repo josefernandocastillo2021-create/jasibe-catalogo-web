@@ -216,6 +216,25 @@
 
     .producto-info__btn-wa:hover { background: var(--color-success-hover); }
 
+    .pdp__btn-compartir {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 16px;
+      background: transparent;
+      color: var(--color-texto);
+      border: 1.5px solid var(--color-borde);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .pdp__btn-compartir:hover { background: var(--color-fondo); border-color: #aaa; }
+
     .producto-info__servicios {
       display: flex;
       flex-direction: column;
@@ -483,6 +502,18 @@
       agregarAlCarrito(PRODUCTO_ACTUAL.id, PRODUCTO_ACTUAL.nombre, PRODUCTO_ACTUAL.precio, n, foto, PRODUCTO_ACTUAL.cantidad);
     }
 
+    async function compartirProducto(nombre) {
+      const url = window.location.href;
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: nombre, text: `Mira este producto en Jasibe: ${nombre}`, url });
+        } catch (_) {}
+      } else {
+        await navigator.clipboard.writeText(url);
+        mostrarToast('Link copiado al portapapeles');
+      }
+    }
+
     /* === Productos relacionados (misma categoría) === */
     function renderizarRelacionados(p) {
       const lista = TODOS.filter(x => x.categoria === p.categoria && x.id !== p.id).slice(0, 8);
@@ -627,6 +658,11 @@
             </svg>
             Comprar por WhatsApp
           </a>
+
+          <button class="pdp__btn-compartir" onclick="compartirProducto('${escaparArg(p.nombre)}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Compartir producto
+          </button>
 
           <div class="pdp__info">
             <div>
